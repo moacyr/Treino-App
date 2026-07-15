@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="Ficha Trekking">
+  <defs>
+    <linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#ceu)"/>
+  <!-- sol -->
+  <circle cx="350" cy="182" r="30" fill="#ffffff" opacity="0.9"/>
+  <!-- montanha de trás -->
+  <path d="M300 356 L360 232 L432 356 Z" fill="#8fb4ff"/>
+  <!-- montanha principal -->
+  <path d="M96 356 L206 168 L316 356 Z" fill="#ffffff"/>
+  <!-- neve no cume -->
+  <path d="M206 168 L176 220 L196 210 L214 232 L232 214 L206 168 Z" fill="#dbe7ff"/>
+  <!-- base / solo -->
+  <rect x="88" y="356" width="336" height="26" rx="13" fill="#0f2a6b"/>
+</svg>
