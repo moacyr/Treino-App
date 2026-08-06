@@ -69,7 +69,6 @@ export const FICHA: Dia[] = [
       ex('remada-baixa', 'Remada Baixa (polia)', 'bilateral', 4, '15', 60, 'Junte as escápulas no fim. Tronco firme, sem balançar.'),
       ex('remada-curvada', 'Remada Curvada com barra', 'bilateral', 3, '15', 60, 'Tronco a ~45°, coluna neutra. Puxe até o umbigo.'),
       ex('pulldown-reto', 'Pulldown com braço estendido', 'bilateral', 3, '20', 45, 'Cotovelo travado quase reto. Isola o dorsal.'),
-      ex('farmers-walk', "Farmer's Walk", 'core', 3, '40 m', 60, 'Halteres pesados, um em cada mão. Ombro pra trás, passo curto.'),
       ex('prancha', 'Prancha isométrica', 'core', 3, '60s', 45, 'Quadril na linha do ombro. Se cair, encerra a série.'),
       ex('prancha-lateral', 'Prancha lateral', 'core', 3, '40s/lado', 30, 'Cada lado. Corrige o desequilíbrio que a mochila causa.'),
     ],
