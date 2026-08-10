@@ -1,6 +1,6 @@
 export type Padrao = 'bilateral' | 'unilateral' | 'core' | 'condicionamento'
 
-export type TipoDia = 'treino' | 'descanso' | 'trilha'
+export type TipoDia = 'treino' | 'descanso' | 'trilha' | 'cardio'
 
 export interface Exercicio {
   /** slug único, ex: 'leg-press-45' */
@@ -26,9 +26,9 @@ export interface Dia {
   /** a linha de lógica do dia */
   subtitulo: string
   tipo: TipoDia
-  /** vazio para descanso/trilha */
+  /** vazio para descanso/trilha/cardio */
   exercicios: Exercicio[]
-  /** texto para dias de descanso/trilha */
+  /** texto para dias de descanso/trilha/cardio */
   nota?: string
 }
 

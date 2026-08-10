@@ -38,7 +38,7 @@ export function DiaView({ dia }: { dia: Dia }) {
         {dia.tipo !== 'treino' ? (
           <div className="nota-card">
             <span className="nota-emoji" aria-hidden="true">
-              {dia.tipo === 'trilha' ? '🥾' : '🌙'}
+              {dia.tipo === 'trilha' ? '🥾' : dia.tipo === 'cardio' ? '🚴' : '🌙'}
             </span>
             <p className="nota-texto">{dia.nota}</p>
           </div>
