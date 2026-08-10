@@ -36,6 +36,7 @@ export const FICHA: Dia[] = [
     exercicios: [
       ex('supino-reto', 'Supino Reto', 'bilateral', 4, '15', 60, 'Barra ou halteres. Escápula presa no banco.'),
       ex('supino-inclinado', 'Supino Inclinado com halteres', 'bilateral', 3, '15', 60, 'Banco a 30–45°. Não deixe os halteres baterem no topo.'),
+      ex('pec-fly', 'Pec Fly (crucifixo na máquina)', 'bilateral', 3, '15', 45, 'Isolamento no fim do peito, depois dos supinos. Cotovelo levemente dobrado e fixo, junte até quase encostar e segure 1s.'),
       ex('desenvolvimento', 'Desenvolvimento Militar', 'bilateral', 4, '15', 60, 'Halteres. Core firme, sem arquear a lombar pra empurrar.'),
       ex('elevacao-lateral', 'Elevação Lateral', 'bilateral', 3, '20', 45, 'Peso leve, movimento limpo. Pare na linha do ombro.'),
       ex('rosca-direta', 'Rosca Direta', 'bilateral', 3, '15', 45, 'Cotovelo colado no tronco. Sem impulso de quadril.'),
