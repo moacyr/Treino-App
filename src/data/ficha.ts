@@ -30,23 +30,8 @@ export const FICHA: Dia[] = [
   {
     id: 'seg',
     diaSemana: 'Segunda',
-    titulo: 'Pernas — Base',
-    subtitulo: 'Distância máxima da trilha. Ponto mais seguro pra carga alta.',
-    tipo: 'treino',
-    exercicios: [
-      ex('leg-press-45', 'Leg Press 45°', 'bilateral', 4, '20', 60, 'Pés na largura do quadril, meio da plataforma. Não trave o joelho no topo.'),
-      ex('agachamento', 'Agachamento (barra ou Smith)', 'bilateral', 4, '15', 60, 'Desça até a coxa ficar paralela ao chão. Peso no meio do pé.'),
-      ex('passada-halteres', 'Passada com halteres', 'unilateral', 3, '20 passos', 60, 'Caminhando. Joelho de trás quase encosta no chão, tronco ereto.'),
-      ex('cadeira-extensora', 'Cadeira Extensora', 'bilateral', 3, '20', 45, 'Segure 1s no topo. Desça devagar — o freio importa mais que a subida.'),
-      ex('mesa-flexora', 'Mesa Flexora', 'bilateral', 3, '20', 45, 'Quadril colado no apoio. Sem levantar o tronco pra puxar mais peso.'),
-      ex('panturrilha-pe', 'Panturrilha em pé', 'bilateral', 4, '25', 45, 'Amplitude total: calcanhar abaixo do degrau, suba ao máximo.'),
-    ],
-  },
-  {
-    id: 'ter',
-    diaSemana: 'Terça',
     titulo: 'Peito + Ombro + Braço',
-    subtitulo: 'Recupera as pernas. Ombro forte carrega mochila sem dor.',
+    subtitulo: 'Recuperação ativa no dia seguinte à trilha. Ombro forte carrega mochila sem dor.',
     tipo: 'treino',
     exercicios: [
       ex('supino-reto', 'Supino Reto', 'bilateral', 4, '15', 60, 'Barra ou halteres. Escápula presa no banco.'),
@@ -56,6 +41,21 @@ export const FICHA: Dia[] = [
       ex('rosca-direta', 'Rosca Direta', 'bilateral', 3, '15', 45, 'Cotovelo colado no tronco. Sem impulso de quadril.'),
       ex('triceps-corda', 'Tríceps Corda', 'bilateral', 3, '20', 45, 'Abra a corda no final do movimento.'),
       ex('face-pull', 'Face Pull', 'core', 3, '20', 45, 'Puxe até a altura do rosto, cotovelo alto. Abre o ombro que a mochila fecha.'),
+    ],
+  },
+  {
+    id: 'ter',
+    diaSemana: 'Terça',
+    titulo: 'Pernas — Força de Subida',
+    subtitulo: '48h depois da trilha, perna recuperada. Carga alta e poucas reps: é força que empurra ladeira acima.',
+    tipo: 'treino',
+    exercicios: [
+      ex('step-up-alto', 'Step-up alto com halteres', 'unilateral', 4, '6–8/perna', 120, 'Banco na altura do joelho ou acima — é o degrau da subida íngreme. Suba empurrando o calcanhar de cima, sem impulso da perna de trás, e desça em 2s.'),
+      ex('agachamento', 'Agachamento (barra ou Smith)', 'bilateral', 4, '6–8', 150, 'Carga alta com técnica limpa: coxa paralela, peso no meio do pé. Fechou as 4 séries no topo da faixa? Sobe 2,5–5 kg na semana seguinte.'),
+      ex('terra-romeno', 'Levantamento Terra Romeno', 'bilateral', 3, '8–10', 120, 'Quadril pra trás, barra raspando a perna, coluna neutra. Extensão de quadril é o motor da subida com mochila.'),
+      ex('leg-press-45', 'Leg Press 45°', 'bilateral', 3, '12', 90, 'Volume depois do pesado. Pés na largura do quadril, meio da plataforma. Não trave o joelho no topo.'),
+      ex('mesa-flexora', 'Mesa Flexora', 'bilateral', 3, '12', 60, 'Quadril colado no apoio. Isquiotibial forte é o que segura o joelho na descida.'),
+      ex('panturrilha-sentada', 'Panturrilha sentada', 'bilateral', 4, '15', 45, 'Joelho dobrado ativa o sóleo — o músculo que sustenta a subida íngreme. Pausa 1s embaixo, amplitude total.'),
     ],
   },
   {
@@ -77,10 +77,10 @@ export const FICHA: Dia[] = [
     id: 'qui',
     diaSemana: 'Quinta',
     titulo: 'Estabilidade + Prevenção',
-    subtitulo: 'Leve de propósito. O que a trilha não treina: tornozelo, glúteo médio e core.',
+    subtitulo: 'Leve de propósito. O que a trilha não treina: tornozelo, glúteo médio, core — e a descida controlada.',
     tipo: 'treino',
     exercicios: [
-      ex('bulgaro-leve', 'Agachamento Búlgaro (leve)', 'unilateral', 3, '12/perna', 60, 'Carga leve. Força unilateral sem fadigar a perna pro domingo.'),
+      ex('step-down', 'Step-down (descida controlada)', 'unilateral', 3, '8/perna', 60, 'Em cima do step, desça em 3s até encostar de leve o calcanhar. Peso do corpo ou halter leve. Treina a descida — onde a trilha longa cobra o joelho.'),
       ex('elevacao-pelvica', 'Elevação Pélvica com halter', 'bilateral', 3, '15', 45, 'Halter sobre o quadril. Aperte o glúteo 1s no topo.'),
       ex('abducao-polia', 'Abdução de quadril na polia', 'unilateral', 3, '20/lado', 45, 'Caneleira na polia baixa. Glúteo médio — trava o joelho na descida.'),
       ex('apoio-unipodal', 'Apoio unipodal (equilíbrio)', 'core', 3, '40s/lado', 30, 'Fique numa perna só. Progrida fechando os olhos.'),
@@ -96,7 +96,7 @@ export const FICHA: Dia[] = [
     subtitulo: 'Recuperação ativa opcional antes do fim de semana.',
     tipo: 'descanso',
     exercicios: [],
-    nota: 'Opcional. 30–40 min de esteira inclinada leve, bike ou mobilidade de quadril e tornozelo. Sem carga. Chegar no domingo com a perna 100%.',
+    nota: 'Opcional. 30–40 min de esteira em inclinação alta (10–15%) e velocidade baixa, sem se apoiar no corrimão — é subida específica sem impacto. Bike ou mobilidade de quadril e tornozelo também servem. Sem carga: chegar no domingo com a perna 100%.',
   },
   {
     id: 'sab',
@@ -114,7 +114,7 @@ export const FICHA: Dia[] = [
     subtitulo: 'O objetivo de tudo. A trilha é o exercício.',
     tipo: 'trilha',
     exercicios: [],
-    nota: 'Mochila carregada, desnível, distância longa. Progrida peso e distância aos poucos. A trilha é o exercício; a semana é preparação.',
+    nota: 'Mochila carregada, desnível, distância longa. Progrida uma variável por vez e comece pelo desnível: metros de subida valem mais que quilômetros planos. O peso da mochila é o último a subir — cerca de 1 kg a cada 2–3 semanas. A trilha é o exercício; a semana é preparação.',
   },
 ]
 
