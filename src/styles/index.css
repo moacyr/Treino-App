@@ -806,3 +806,10 @@ button {
     font-size: 22px;
   }
 }
+
+.semana-info {
+  margin: 0 4px 12px;
+  color: var(--tinta-3);
+  font-size: 12.5px;
+  line-height: 1.5;
+}
