@@ -134,6 +134,9 @@ button {
 .topo--dia.tipo-trilha {
   border-top-color: var(--verde);
 }
+.topo--dia.tipo-cardio {
+  border-top-color: var(--condicionamento);
+}
 
 /* Botão voltar */
 .btn-voltar {
@@ -236,6 +239,10 @@ button {
 .card-dia.tipo-trilha {
   border-left-color: var(--verde);
   background: linear-gradient(180deg, #f2fbf5, var(--surface));
+}
+.card-dia.tipo-cardio {
+  border-left-color: var(--condicionamento);
+  background: linear-gradient(180deg, var(--condicionamento-bg), var(--surface));
 }
 .card-dia--hoje {
   outline: 2px solid var(--azul);

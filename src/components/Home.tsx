@@ -21,7 +21,14 @@ function diaDeHojeId(): string {
 function iconeTipo(dia: Dia): string {
   if (dia.tipo === 'trilha') return '🥾'
   if (dia.tipo === 'descanso') return '🌙'
+  if (dia.tipo === 'cardio') return '🚴'
   return ''
+}
+
+const ROTULO_TIPO: Record<string, string> = {
+  trilha: 'Trilha',
+  descanso: 'Descanso',
+  cardio: 'Cardio',
 }
 
 export function Home() {
@@ -103,9 +110,7 @@ export function Home() {
                   </div>
                 ) : (
                   <div className="card-dia-rodape">
-                    <span className="card-dia-tag-tipo">
-                      {dia.tipo === 'trilha' ? 'Trilha' : 'Descanso'}
-                    </span>
+                    <span className="card-dia-tag-tipo">{ROTULO_TIPO[dia.tipo]}</span>
                   </div>
                 )}
               </button>
