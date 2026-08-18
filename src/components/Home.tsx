@@ -3,6 +3,8 @@ import { FICHA } from '../data/ficha'
 import type { Dia, SessaoRegistro } from '../types'
 import { getSessoesDaSemana, semanaISO } from '../db/db'
 import { irPara } from '../router'
+import { useVersaoDados } from '../hooks/useSync'
+import { ContaBar } from './ContaBar'
 
 const ORDEM_SEMANA: Record<number, string> = {
   0: 'dom',
@@ -41,6 +43,7 @@ export function Home() {
   const [sessoesSemana, setSessoesSemana] = useState<Record<string, SessaoRegistro>>({})
   const hojeId = diaDeHojeId()
   const semana = semanaISO()
+  const versaoDados = useVersaoDados()
 
   useEffect(() => {
     let ativo = true
@@ -53,7 +56,7 @@ export function Home() {
     return () => {
       ativo = false
     }
-  }, [])
+  }, [versaoDados])
 
   return (
     <>
@@ -130,10 +133,7 @@ export function Home() {
           })}
         </div>
 
-        <p className="rodape-app">
-          Dados salvos só neste aparelho. Funciona offline. Instale na tela inicial
-          para abrir como um app.
-        </p>
+        <ContaBar />
       </main>
     </>
   )

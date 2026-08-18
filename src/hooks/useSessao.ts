@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Dia, SessaoRegistro } from '../types'
 import { getSessao, hojeISO, idSessao, salvarSessao, semanaISO } from '../db/db'
+import { agendarSync } from '../sync/sync'
+import { useVersaoDados } from './useSync'
 
 function sessaoVazia(dia: Dia, semana: string, dataISO: string): SessaoRegistro {
   const cargas: SessaoRegistro['cargas'] = {}
@@ -14,6 +16,8 @@ function sessaoVazia(dia: Dia, semana: string, dataISO: string): SessaoRegistro 
     semana,
     cargas,
     concluidos: [],
+    atualizadoEm: new Date().toISOString(),
+    pendente: 1,
   }
 }
 
@@ -49,6 +53,8 @@ export function useSessao(dia: Dia): UseSessao {
   const [sessao, setSessao] = useState<SessaoRegistro | null>(null)
   const [carregado, setCarregado] = useState(false)
   const sessaoRef = useRef<SessaoRegistro | null>(null)
+  // Recarrega quando a sincronização traz dados de outro aparelho.
+  const versaoDados = useVersaoDados()
 
   useEffect(() => {
     let ativo = true
@@ -66,14 +72,14 @@ export function useSessao(dia: Dia): UseSessao {
       ativo = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dia.id, semana])
+  }, [dia.id, semana, versaoDados])
 
   const persistir = useCallback((base: SessaoRegistro) => {
     // `data` guarda o dia do último registro — é o que o histórico exibe.
     const next = { ...base, data: hojeISO() }
     sessaoRef.current = next
     setSessao(next)
-    void salvarSessao(next)
+    void salvarSessao(next).then(() => agendarSync())
   }, [])
 
   const setCarga = useCallback(

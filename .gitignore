@@ -6,3 +6,7 @@ dist-ssr
 .vite
 *.log
 *.tsbuildinfo
+
+# Variáveis locais (Supabase)
+.env
+.env.local

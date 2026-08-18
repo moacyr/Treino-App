@@ -14,8 +14,10 @@ import '@fontsource/jetbrains-mono/700.css'
 
 import './styles/index.css'
 import { App } from './App'
+import { iniciarSync } from './sync/sync'
 
 registerSW({ immediate: true })
+iniciarSync()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

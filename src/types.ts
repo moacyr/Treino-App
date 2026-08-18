@@ -47,4 +47,8 @@ export interface SessaoRegistro {
   }
   /** ids de exercícios marcados como feitos */
   concluidos: string[]
+  /** ISO timestamp da última edição — critério de conflito no sync (last-write-wins) */
+  atualizadoEm: string
+  /** 1 = ainda não enviada para a nuvem (só local) */
+  pendente: 0 | 1
 }

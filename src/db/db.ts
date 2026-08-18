@@ -9,12 +9,18 @@ interface TreinoDB extends DBSchema {
       'by-dia': string
       'by-data': string
       'by-semana': string
+      /** 1 = aguardando envio ao Supabase, 0 = já sincronizado */
+      'by-pendente': number
     }
+  }
+  meta: {
+    key: string
+    value: { chave: string; valor: string }
   }
 }
 
 const DB_NOME = 'ficha-trekking'
-const DB_VERSAO = 2
+const DB_VERSAO = 3
 
 let dbPromise: Promise<IDBPDatabase<TreinoDB>> | null = null
 
@@ -44,6 +50,17 @@ function getDb(): Promise<IDBPDatabase<TreinoDB>> {
             if (!existente || existente.data <= novo.data) porId.set(novo.id, novo)
           }
           for (const s of porId.values()) await store.put(s)
+        }
+        if (versaoAntiga < 3) {
+          // v3: metadados de sincronização com a nuvem. Tudo que já existe
+          // localmente entra como pendente para subir no primeiro sync.
+          db.createObjectStore('meta', { keyPath: 'chave' })
+          const store = tx.objectStore('sessoes')
+          store.createIndex('by-pendente', 'pendente')
+          const agora = new Date().toISOString()
+          for (const s of await store.getAll()) {
+            await store.put({ ...s, atualizadoEm: s.atualizadoEm ?? agora, pendente: 1 })
+          }
         }
       },
     })
@@ -82,8 +99,59 @@ export async function getSessao(id: string): Promise<SessaoRegistro | undefined>
   return (await getDb()).get('sessoes', id)
 }
 
+/**
+ * Grava uma alteração feita pelo usuário: carimba `atualizadoEm` e marca a
+ * sessão como pendente de envio para a nuvem.
+ */
 export async function salvarSessao(sessao: SessaoRegistro): Promise<void> {
-  await (await getDb()).put('sessoes', sessao)
+  const registro: SessaoRegistro = {
+    ...sessao,
+    atualizadoEm: new Date().toISOString(),
+    pendente: 1,
+  }
+  await (await getDb()).put('sessoes', registro)
+}
+
+/** Grava sem marcar como pendente — usado pelo sync ao aplicar dados remotos. */
+export async function salvarSessaoRemota(sessao: SessaoRegistro): Promise<void> {
+  await (await getDb()).put('sessoes', { ...sessao, pendente: 0 })
+}
+
+/** Sessões que ainda não foram enviadas para a nuvem. */
+export async function getSessoesPendentes(): Promise<SessaoRegistro[]> {
+  return (await getDb()).getAllFromIndex('sessoes', 'by-pendente', 1)
+}
+
+/**
+ * Marca como sincronizadas apenas as sessões cujo `atualizadoEm` não mudou
+ * desde o envio — se o usuário editou durante o push, segue pendente.
+ */
+export async function marcarSincronizadas(
+  enviadas: { id: string; atualizadoEm: string }[],
+): Promise<void> {
+  const db = await getDb()
+  const tx = db.transaction('sessoes', 'readwrite')
+  for (const { id, atualizadoEm } of enviadas) {
+    const atual = await tx.store.get(id)
+    if (atual && atual.atualizadoEm === atualizadoEm) {
+      await tx.store.put({ ...atual, pendente: 0 })
+    }
+  }
+  await tx.done
+}
+
+export async function getMeta(chave: string): Promise<string | null> {
+  return (await (await getDb()).get('meta', chave))?.valor ?? null
+}
+
+export async function setMeta(chave: string, valor: string): Promise<void> {
+  await (await getDb()).put('meta', { chave, valor })
+}
+
+export async function limparTudo(): Promise<void> {
+  const db = await getDb()
+  await db.clear('sessoes')
+  await db.clear('meta')
 }
 
 export async function getTodasSessoes(): Promise<SessaoRegistro[]> {
