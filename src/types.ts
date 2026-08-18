@@ -34,15 +34,21 @@ export interface Dia {
 
 /** Uma sessão = um dia treinado numa data */
 export interface SessaoRegistro {
-  /** `${diaId}-${dataISO}` */
+  /** `${diaId}-${semana}` */
   id: string
   diaId: string
-  /** ISO date, ex: '2026-07-15' */
+  /** ISO date do último registro, ex: '2026-07-15' */
   data: string
+  /** segunda-feira da semana a que a sessão pertence, ex: '2026-07-13' */
+  semana: string
   cargas: {
     /** uma entrada por série */
     [exercicioId: string]: (number | null)[]
   }
   /** ids de exercícios marcados como feitos */
   concluidos: string[]
+  /** ISO timestamp da última edição — critério de conflito no sync (last-write-wins) */
+  atualizadoEm: string
+  /** 1 = ainda não enviada para a nuvem (só local) */
+  pendente: 0 | 1
 }

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { FICHA } from '../data/ficha'
 import type { Dia, SessaoRegistro } from '../types'
-import { getSessoesPorData, hojeISO } from '../db/db'
+import { getSessoesDaSemana, semanaISO } from '../db/db'
 import { irPara } from '../router'
+import { useVersaoDados } from '../hooks/useSync'
+import { ContaBar } from './ContaBar'
 
 const ORDEM_SEMANA: Record<number, string> = {
   0: 'dom',
@@ -16,6 +18,12 @@ const ORDEM_SEMANA: Record<number, string> = {
 
 function diaDeHojeId(): string {
   return ORDEM_SEMANA[new Date().getDay()]
+}
+
+/** '2026-08-17' → '17/08' */
+function rotuloCurto(iso: string): string {
+  const [, mes, dia] = iso.split('-')
+  return `${dia}/${mes}`
 }
 
 function iconeTipo(dia: Dia): string {
@@ -32,21 +40,23 @@ const ROTULO_TIPO: Record<string, string> = {
 }
 
 export function Home() {
-  const [sessoesHoje, setSessoesHoje] = useState<Record<string, SessaoRegistro>>({})
+  const [sessoesSemana, setSessoesSemana] = useState<Record<string, SessaoRegistro>>({})
   const hojeId = diaDeHojeId()
+  const semana = semanaISO()
+  const versaoDados = useVersaoDados()
 
   useEffect(() => {
     let ativo = true
-    getSessoesPorData(hojeISO()).then((lista) => {
+    getSessoesDaSemana(semanaISO()).then((lista) => {
       if (!ativo) return
       const mapa: Record<string, SessaoRegistro> = {}
       for (const s of lista) mapa[s.diaId] = s
-      setSessoesHoje(mapa)
+      setSessoesSemana(mapa)
     })
     return () => {
       ativo = false
     }
-  }, [])
+  }, [versaoDados])
 
   return (
     <>
@@ -67,9 +77,14 @@ export function Home() {
       </header>
 
       <main className="conteudo">
+        <p className="semana-info">
+          Semana de <span className="mono">{rotuloCurto(semana)}</span> · o que foi
+          marcado fica até a virada de segunda-feira.
+        </p>
+
         <div className="semana">
           {FICHA.map((dia) => {
-            const sessao = sessoesHoje[dia.id]
+            const sessao = sessoesSemana[dia.id]
             const feitos = sessao?.concluidos.length ?? 0
             const total = dia.exercicios.length
             const ehHoje = dia.id === hojeId
@@ -118,10 +133,7 @@ export function Home() {
           })}
         </div>
 
-        <p className="rodape-app">
-          Dados salvos só neste aparelho. Funciona offline. Instale na tela inicial
-          para abrir como um app.
-        </p>
+        <ContaBar />
       </main>
     </>
   )

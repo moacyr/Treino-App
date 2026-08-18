@@ -1,18 +1,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Dia, SessaoRegistro } from '../types'
-import { getSessao, hojeISO, idSessao, salvarSessao } from '../db/db'
+import { getSessao, hojeISO, idSessao, salvarSessao, semanaISO } from '../db/db'
+import { agendarSync } from '../sync/sync'
+import { useVersaoDados } from './useSync'
 
-function sessaoVazia(dia: Dia, dataISO: string): SessaoRegistro {
+function sessaoVazia(dia: Dia, semana: string, dataISO: string): SessaoRegistro {
   const cargas: SessaoRegistro['cargas'] = {}
   for (const ex of dia.exercicios) {
     cargas[ex.id] = Array<number | null>(ex.series).fill(null)
   }
   return {
-    id: idSessao(dia.id, dataISO),
+    id: idSessao(dia.id, semana),
     diaId: dia.id,
     data: dataISO,
+    semana,
     cargas,
     concluidos: [],
+    atualizadoEm: new Date().toISOString(),
+    pendente: 1,
   }
 }
 
@@ -38,19 +43,27 @@ interface UseSessao {
   progresso: (dia: Dia) => { feitos: number; total: number }
 }
 
-/** Carrega/cria a sessão de hoje para um dia e persiste cada alteração. */
+/**
+ * Carrega/cria a sessão da semana corrente para um dia e persiste cada alteração.
+ * O que foi marcado continua visível até a virada da semana (segunda-feira).
+ */
 export function useSessao(dia: Dia): UseSessao {
   const dataISO = hojeISO()
+  const semana = semanaISO(dataISO)
   const [sessao, setSessao] = useState<SessaoRegistro | null>(null)
   const [carregado, setCarregado] = useState(false)
   const sessaoRef = useRef<SessaoRegistro | null>(null)
+  // Recarrega quando a sincronização traz dados de outro aparelho.
+  const versaoDados = useVersaoDados()
 
   useEffect(() => {
     let ativo = true
     setCarregado(false)
-    getSessao(idSessao(dia.id, dataISO)).then((existente) => {
+    getSessao(idSessao(dia.id, semana)).then((existente) => {
       if (!ativo) return
-      const base = existente ? normalizar(dia, existente) : sessaoVazia(dia, dataISO)
+      const base = existente
+        ? normalizar(dia, existente)
+        : sessaoVazia(dia, semana, dataISO)
       sessaoRef.current = base
       setSessao(base)
       setCarregado(true)
@@ -59,12 +72,14 @@ export function useSessao(dia: Dia): UseSessao {
       ativo = false
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dia.id, dataISO])
+  }, [dia.id, semana, versaoDados])
 
-  const persistir = useCallback((next: SessaoRegistro) => {
+  const persistir = useCallback((base: SessaoRegistro) => {
+    // `data` guarda o dia do último registro — é o que o histórico exibe.
+    const next = { ...base, data: hojeISO() }
     sessaoRef.current = next
     setSessao(next)
-    void salvarSessao(next)
+    void salvarSessao(next).then(() => agendarSync())
   }, [])
 
   const setCarga = useCallback(
