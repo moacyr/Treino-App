@@ -16,6 +16,12 @@ export const supabase: SupabaseClient | null = syncHabilitado
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
+        // Fluxo implícito de propósito: o PKCE guarda o `code_verifier` no
+        // storage de quem pediu o link, então o login só fecharia no mesmo
+        // contexto. Como o link do e-mail costuma abrir no navegador (e o PWA
+        // instalado tem storage próprio), o código do e-mail precisa poder ser
+        // validado direto aqui dentro — ver `entrarComCodigo` em sync.ts.
+        flowType: 'implicit',
       },
     })
   : null

@@ -26,6 +26,12 @@ export default defineConfig({
         orientation: 'portrait',
         start_url: base,
         scope: base,
+        // Android/Chrome: links dentro do escopo abrem no app instalado em vez
+        // do navegador, reaproveitando a janela já aberta. Não resolve o link
+        // do e-mail (ele passa antes pelo domínio do Supabase), por isso o
+        // login também aceita o código de 6 dígitos.
+        handle_links: 'preferred',
+        launch_handler: { client_mode: 'navigate-existing' },
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },

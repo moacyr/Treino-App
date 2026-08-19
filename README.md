@@ -21,8 +21,9 @@ dispositivos — **o app continua funcionando 100% offline nos dois casos**.
 - **Link de vídeo** — botão que abre a busca de execução no YouTube.
 - **Offline + instalável** — funciona 100% sem internet após a primeira carga e
   é instalável na tela inicial (iOS e Android).
-- **Backup e sync na nuvem (opcional)** — login por link mágico no e-mail e
-  sincronização offline-first com o Supabase (ver abaixo).
+- **Backup e sync na nuvem (opcional)** — login por código de 6 dígitos enviado
+  por e-mail (funciona dentro do app instalado) e sincronização offline-first
+  com o Supabase (ver abaixo).
 
 ## Stack
 
@@ -107,6 +108,21 @@ local, sem tela de login.
 3. Em **Authentication → Providers**, deixe **Email** ligado com *magic link*.
    Em **URL Configuration**, adicione a URL do app
    (`https://moacyr.github.io/Treino-App/`) em *Site URL* e *Redirect URLs*.
+4. **Obrigatório para o app instalado:** em **Authentication → Emails →
+   Templates → Magic Link**, inclua o código de 6 dígitos no corpo do e-mail —
+   o template padrão só traz o link:
+
+   ```html
+   <h2>Entrar na Ficha Trekking</h2>
+   <p>Seu código de acesso é:</p>
+   <p style="font-size:28px;letter-spacing:4px"><strong>{{ .Token }}</strong></p>
+   <p>Digite esse código dentro do app. Ele vale por 1 hora.</p>
+   <p>Ou, se estiver no navegador, <a href="{{ .ConfirmationURL }}">entre por este link</a>.</p>
+   ```
+
+   Faça o mesmo no template **Confirm signup**, que é o e-mail do primeiro
+   acesso de cada conta. Sem `{{ .Token }}` chega só o link, e o link não
+   consegue logar o PWA instalado (ver abaixo).
 
 ### 2. Configurar o app
 
@@ -126,9 +142,31 @@ passa as duas para o build.
 
 ### 3. Usar
 
-No rodapé da Home aparece o cartão de conta: informe o e-mail, receba o link e
-abra-o **no mesmo aparelho**. A partir daí o mesmo e-mail em outro celular ou no
-desktop puxa o mesmo histórico.
+No rodapé da Home aparece o cartão de conta: toque em **Entrar**, informe o
+e-mail e **digite no app o código de 6 dígitos** que chega por e-mail. A partir
+daí o mesmo e-mail em outro celular ou no desktop puxa o mesmo histórico.
+
+#### Por que código, e não o link do e-mail
+
+Tocar no link do e-mail **não loga o app instalado**, e isso não é bug do app:
+
+- No **iOS**, um PWA na tela inicial roda num contêiner de armazenamento
+  próprio, separado do Safari. O app de e-mail sempre abre links no Safari,
+  então a sessão criada pelo link fica no Safari — o app continua deslogado.
+- No **Android** o link do e-mail costuma abrir numa *custom tab* do Gmail. E
+  mesmo com `handle_links` no manifest, o link mágico aponta primeiro para o
+  domínio do Supabase (`…supabase.co/auth/v1/verify`), fora do escopo do app,
+  então a captura de link do PWA não se aplica.
+
+O código de 6 dígitos resolve porque a validação (`verifyOtp`) acontece dentro
+do próprio app — nada precisa navegar. Como plano B, o campo do código também
+aceita o **endereço do link** colado do e-mail (segure o link → "Copiar"),
+desde que o link ainda não tenha sido aberto: cada link só vale uma vez.
+
+O app usa o fluxo **implícito** de propósito (`flowType: 'implicit'` em
+`src/sync/supabase.ts`). O PKCE guardaria o `code_verifier` no storage de quem
+pediu o código, o que amarraria o login ao contexto que abriu a tela — exatamente
+o que quebra no PWA.
 
 ### Como o sync funciona
 

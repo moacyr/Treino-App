@@ -928,6 +928,42 @@ button {
   outline-offset: 1px;
 }
 
+.conta-input--codigo {
+  font-family: var(--fonte-mono);
+  font-size: 16px;
+  letter-spacing: 0.18em;
+}
+
+.conta-links {
+  display: flex;
+  gap: 14px;
+  margin-top: 9px;
+}
+
+.conta-link {
+  padding: 0;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--azul);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.conta-link:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.conta-ajuda {
+  margin: 9px 0 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--tinta-3);
+}
+
 .conta-aviso {
   margin: 10px 0 0;
   font-size: 12.5px;

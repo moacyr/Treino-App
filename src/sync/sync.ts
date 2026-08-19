@@ -215,6 +215,8 @@ export function iniciarSync(): void {
     void (async () => {
       await garantirMesmoUsuario(usuario?.id ?? null)
       if (usuario) {
+        // Entrou (pelo código ou pelo link aberto aqui): o pedido acabou.
+        guardarPendente(null)
         atualizar({ email: usuario.email ?? null })
         if (evento !== 'TOKEN_REFRESHED') await sincronizar()
       } else {
@@ -237,6 +239,31 @@ export function iniciarSync(): void {
   })
 }
 
+const CHAVE_LOGIN = 'sync:login-pendente'
+
+/** E-mail que já pediu um código e ainda não confirmou. */
+export function emailPendente(): string | null {
+  try {
+    return localStorage.getItem(CHAVE_LOGIN)
+  } catch {
+    return null
+  }
+}
+
+function guardarPendente(email: string | null): void {
+  try {
+    if (email) localStorage.setItem(CHAVE_LOGIN, email)
+    else localStorage.removeItem(CHAVE_LOGIN)
+  } catch {
+    /* modo privado sem storage — o login continua funcionando na sessão atual */
+  }
+}
+
+/** Desiste do código pendente e volta para a tela de e-mail. */
+export function cancelarLogin(): void {
+  guardarPendente(null)
+}
+
 export async function entrarComEmail(email: string): Promise<void> {
   if (!supabase) throw new Error('Sincronização não configurada neste build.')
   const { error } = await supabase.auth.signInWithOtp({
@@ -244,6 +271,69 @@ export async function entrarComEmail(email: string): Promise<void> {
     options: { emailRedirectTo: `${window.location.origin}${import.meta.env.BASE_URL}` },
   })
   if (error) throw error
+  guardarPendente(email)
+}
+
+type Colado =
+  /** o link do e-mail, ainda não aberto — o token é trocado por sessão aqui */
+  | { tipo: 'token'; token: string; otp: string }
+  /** a URL de retorno com a sessão no fragmento (link já aberto no navegador) */
+  | { tipo: 'sessao'; access: string; refresh: string }
+
+/**
+ * Entende a URL do link mágico colada do e-mail (ou da barra de endereço do
+ * navegador). Os parâmetros aparecem ora na query, ora no fragmento, então
+ * procura nos dois.
+ */
+function lerLink(texto: string): Colado | null {
+  if (!/^https?:\/\//i.test(texto)) return null
+  let url: URL
+  try {
+    url = new URL(texto)
+  } catch {
+    return null
+  }
+  const fragmento = new URLSearchParams(url.hash.replace(/^#\/?/, ''))
+  const ler = (chave: string) => url.searchParams.get(chave) ?? fragmento.get(chave)
+
+  const access = ler('access_token')
+  const refresh = ler('refresh_token')
+  if (access && refresh) return { tipo: 'sessao', access, refresh }
+
+  const token = ler('token_hash') ?? ler('token')
+  if (token) return { tipo: 'token', token, otp: ler('type') ?? 'magiclink' }
+  return null
+}
+
+/**
+ * Fecha o login sem sair do app: aceita o código de 6 dígitos do e-mail ou a
+ * URL do link mágico colada. É o caminho que funciona no PWA instalado — o
+ * link do e-mail abre no navegador, que tem storage separado do app.
+ */
+export async function entrarComCodigo(email: string, valor: string): Promise<void> {
+  if (!supabase) throw new Error('Sincronização não configurada neste build.')
+  const texto = valor.trim()
+  if (!texto) throw new Error('Digite o código de 6 dígitos que chegou no e-mail.')
+
+  const link = lerLink(texto)
+  if (link?.tipo === 'sessao') {
+    const { error } = await supabase.auth.setSession({
+      access_token: link.access,
+      refresh_token: link.refresh,
+    })
+    if (error) throw error
+  } else if (link?.tipo === 'token') {
+    const { error } = await supabase.auth.verifyOtp({ token_hash: link.token, type: link.otp })
+    if (error) throw error
+  } else {
+    const codigo = texto.replace(/\D/g, '')
+    if (codigo.length !== 6) {
+      throw new Error('Código inválido: são 6 dígitos. Ou cole o endereço do link do e-mail.')
+    }
+    const { error } = await supabase.auth.verifyOtp({ email, token: codigo, type: 'email' })
+    if (error) throw error
+  }
+  guardarPendente(null)
 }
 
 /**
