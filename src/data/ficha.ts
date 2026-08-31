@@ -88,7 +88,7 @@ export const FICHA: Dia[] = [
       ex('puxada-frontal', 'Puxada Frontal (pulley)', 'bilateral', 4, '6–8', 120, 'Carga alta: puxe com o cotovelo, não com a mão. Peito aberto, sem jogar o tronco pra trás. Fechou as 4 séries em 8? Sobe uma placa na semana seguinte.'),
       ex('remada-baixa', 'Remada Baixa (polia)', 'bilateral', 4, '6–8', 120, 'Carga alta. Junte as escápulas no fim. Tronco firme, sem balançar pra puxar mais peso. Fechou as 4 séries em 8? Sobe uma placa na semana seguinte.'),
       ex('remada-curvada', 'Remada Curvada com barra', 'bilateral', 3, '8–12', 90, 'Tronco a ~45°, coluna neutra. Puxe até o umbigo.'),
-      ex('cadeira-abdutora', 'Cadeira Abdutora (máquina)', 'bilateral', 3, '15–20', 45, 'Mesmo alvo da abdução na polia: glúteo médio, que segura o joelho na descida e pedalar não treina. Tronco um pouco à frente, abra até o fim, segure 1s e volte devagar — sem deixar as placas baterem.'),
+      ex('cadeira-abdutora', 'Cadeira Abdutora (máquina)', 'bilateral', 3, '15–20', 45, 'Glúteo médio: é ele que segura o joelho na descida, e pedalar não treina isso. Tronco um pouco à frente, abra até o fim, segure 1s e volte devagar — sem deixar as placas baterem.'),
       ex('panturrilha-uni', 'Panturrilha unilateral no step', 'unilateral', 3, '20/perna', 45, 'Uma perna por vez, amplitude total. Carga leve: faltam dois dias pra trilha.'),
       ex('apoio-unipodal', 'Apoio unipodal (equilíbrio)', 'core', 3, '40s/lado', 30, 'Fique numa perna só. Progrida fechando os olhos. Tornozelo de terreno irregular.'),
       ex('prancha', 'Prancha isométrica', 'core', 3, '60s', 45, 'Quadril na linha do ombro. Se cair, encerra a série.'),
