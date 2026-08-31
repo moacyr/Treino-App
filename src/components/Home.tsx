@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { FICHA } from '../data/ficha'
+import { contarConcluidos, FICHA } from '../data/ficha'
 import type { Dia, SessaoRegistro } from '../types'
 import { getSessoesDaSemana, semanaISO } from '../db/db'
 import { irPara } from '../router'
@@ -85,7 +85,7 @@ export function Home() {
         <div className="semana">
           {FICHA.map((dia) => {
             const sessao = sessoesSemana[dia.id]
-            const feitos = sessao?.concluidos.length ?? 0
+            const feitos = contarConcluidos(dia, sessao?.concluidos)
             const total = dia.exercicios.length
             const ehHoje = dia.id === hojeId
             const pct = total > 0 ? Math.round((feitos / total) * 100) : 0

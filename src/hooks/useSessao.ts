@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Dia, SessaoRegistro } from '../types'
 import { getSessao, hojeISO, idSessao, salvarSessao, semanaISO } from '../db/db'
+import { contarConcluidos } from '../data/ficha'
 import { agendarSync } from '../sync/sync'
 import { useVersaoDados } from './useSync'
 
@@ -111,7 +112,7 @@ export function useSessao(dia: Dia): UseSessao {
 
   const progresso = useCallback(
     (d: Dia) => ({
-      feitos: sessao ? sessao.concluidos.length : 0,
+      feitos: contarConcluidos(d, sessao?.concluidos),
       total: d.exercicios.length,
     }),
     [sessao],

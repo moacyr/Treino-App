@@ -61,9 +61,9 @@ src/
   hooks/useSync.ts       # estado da sincronização para a UI
   timer/                 # timer de descanso (contexto + áudio/vibração)
   components/            # Home, DiaView, ExercicioItem, HistoricoView, ContaBar
-supabase/schema.sql      # tabela, índice, trigger e RLS para rodar no Supabase
   router.ts              # roteamento por hash (#/ , #/dia/:id , #/hist/:id)
   types.ts               # tipos de domínio (Exercicio, Dia, SessaoRegistro)
+supabase/schema.sql      # tabela, índice, trigger e RLS para rodar no Supabase
 ```
 
 ### Modelo de dados gravado

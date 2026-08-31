@@ -1,4 +1,5 @@
 import type { Dia } from '../types'
+import { contarConcluidos } from '../data/ficha'
 import { useSessao } from '../hooks/useSessao'
 import { irPara } from '../router'
 import { ExercicioItem } from './ExercicioItem'
@@ -8,7 +9,7 @@ export function DiaView({ dia }: { dia: Dia }) {
   const { sessao, carregado, setCarga, alternarConcluido } = useSessao(dia)
 
   const total = dia.exercicios.length
-  const feitos = sessao?.concluidos.length ?? 0
+  const feitos = contarConcluidos(dia, sessao?.concluidos)
   const pct = total > 0 ? Math.round((feitos / total) * 100) : 0
 
   return (

@@ -37,7 +37,7 @@ export const FICHA: Dia[] = [
       ex('supino-reto', 'Supino Reto', 'bilateral', 4, '6–8', 120, 'Barra ou halteres, carga alta com técnica limpa. Escápula presa no banco. Fechou as 4 séries no topo da faixa? Sobe 2,5 kg na semana seguinte.'),
       ex('supino-inclinado', 'Supino Inclinado com halteres', 'bilateral', 3, '8–12', 90, 'Banco a 30–45°. Não deixe os halteres baterem no topo.'),
       ex('pec-fly', 'Pec Fly (crucifixo na máquina)', 'bilateral', 3, '8–12', 90, 'Isolamento no fim do peito, depois dos supinos. Cotovelo levemente dobrado e fixo, junte até quase encostar e segure 1s.'),
-      ex('desenvolvimento', 'Desenvolvimento Militar', 'bilateral', 4, '6–8', 120, 'Halteres ou barra, carga alta. Core firme, sem arquear a lombar pra empurrar. Ombro forte é o que segura a alça da mochila hora após hora.'),
+      ex('desenvolvimento', 'Desenvolvimento Militar', 'bilateral', 4, '6–8', 120, 'Halteres ou barra, carga alta. Core firme, sem arquear a lombar pra empurrar. Ombro forte é o que segura a alça da mochila hora após hora. Fechou as 4 séries em 8? Sobe pro próximo par de halteres na semana seguinte.'),
       ex('elevacao-lateral', 'Elevação Lateral', 'bilateral', 3, '20', 45, 'Peso leve, movimento limpo. Pare na linha do ombro.'),
       ex('rosca-direta', 'Rosca Direta', 'bilateral', 3, '15', 45, 'Cotovelo colado no tronco. Sem impulso de quadril.'),
       ex('triceps-corda', 'Tríceps Corda', 'bilateral', 3, '20', 45, 'Abra a corda no final do movimento.'),
@@ -60,7 +60,7 @@ export const FICHA: Dia[] = [
     subtitulo: '72h depois da trilha, perna inteira. Carga alta e poucas reps: é força que empurra ladeira acima.',
     tipo: 'treino',
     exercicios: [
-      ex('step-up-alto', 'Step-up alto com halteres', 'unilateral', 4, '6–8/perna', 120, 'Banco na altura do joelho ou acima — é o degrau da subida íngreme. Suba empurrando o calcanhar de cima, sem impulso da perna de trás, e desça em 2s.'),
+      ex('step-up-alto', 'Step-up alto com halteres', 'unilateral', 4, '6–8/perna', 120, 'Banco na altura do joelho ou acima — é o degrau da subida íngreme. Suba empurrando o calcanhar de cima, sem impulso da perna de trás, e desça em 2s. Fechou as 4 séries em 8/perna? Sobe 2 kg em cada halter na semana seguinte.'),
       ex('agachamento', 'Agachamento (barra ou Smith)', 'bilateral', 4, '6–8', 150, 'Carga alta com técnica limpa: coxa paralela, peso no meio do pé. Fechou as 4 séries no topo da faixa? Sobe 2,5–5 kg na semana seguinte.'),
       ex('terra-romeno', 'Levantamento Terra Romeno', 'bilateral', 3, '8–10', 120, 'Quadril pra trás, barra raspando a perna, coluna neutra. Extensão de quadril é o motor da subida com mochila.'),
       ex('leg-press-45', 'Leg Press 45°', 'bilateral', 3, '12', 90, 'Volume depois do pesado. Pés na largura do quadril, meio da plataforma. Não trave o joelho no topo.'),
@@ -85,8 +85,8 @@ export const FICHA: Dia[] = [
     subtitulo: 'Puxada e tronco sustentam a postura sob mochila. Fecha com o que a bike não treina: glúteo médio, tornozelo e equilíbrio.',
     tipo: 'treino',
     exercicios: [
-      ex('puxada-frontal', 'Puxada Frontal (pulley)', 'bilateral', 4, '6–8', 120, 'Carga alta: puxe com o cotovelo, não com a mão. Peito aberto, sem jogar o tronco pra trás.'),
-      ex('remada-baixa', 'Remada Baixa (polia)', 'bilateral', 4, '6–8', 120, 'Carga alta. Junte as escápulas no fim. Tronco firme, sem balançar pra puxar mais peso.'),
+      ex('puxada-frontal', 'Puxada Frontal (pulley)', 'bilateral', 4, '6–8', 120, 'Carga alta: puxe com o cotovelo, não com a mão. Peito aberto, sem jogar o tronco pra trás. Fechou as 4 séries em 8? Sobe uma placa na semana seguinte.'),
+      ex('remada-baixa', 'Remada Baixa (polia)', 'bilateral', 4, '6–8', 120, 'Carga alta. Junte as escápulas no fim. Tronco firme, sem balançar pra puxar mais peso. Fechou as 4 séries em 8? Sobe uma placa na semana seguinte.'),
       ex('remada-curvada', 'Remada Curvada com barra', 'bilateral', 3, '8–12', 90, 'Tronco a ~45°, coluna neutra. Puxe até o umbigo.'),
       ex('abducao-polia', 'Abdução de quadril na polia', 'unilateral', 3, '20/lado', 45, 'Caneleira na polia baixa. Glúteo médio — trava o joelho na descida, e pedalar não treina isso.'),
       ex('panturrilha-uni', 'Panturrilha unilateral no step', 'unilateral', 3, '20/perna', 45, 'Uma perna por vez, amplitude total. Carga leve: faltam dois dias pra trilha.'),
@@ -128,6 +128,18 @@ export const EXERCICIO_POR_ID: Record<string, { exercicio: Exercicio; dia: Dia }
       dia.exercicios.map((exercicio) => [exercicio.id, { exercicio, dia }]),
     ),
   )
+
+/**
+ * Quantos exercícios do dia estão marcados como feitos. Ignora ids que já não
+ * existem na ficha: quando um exercício sai do plano no meio da semana, o
+ * registro daquela semana ainda carrega o id antigo e a contagem passaria do
+ * total (barra acima de 100%).
+ */
+export function contarConcluidos(dia: Dia, concluidos: string[] | undefined): number {
+  if (!concluidos || concluidos.length === 0) return 0
+  const ids = new Set(dia.exercicios.map((e) => e.id))
+  return concluidos.reduce((n, id) => (ids.has(id) ? n + 1 : n), 0)
+}
 
 export const ROTULO_PADRAO: Record<Padrao, string> = {
   bilateral: 'Bilateral',
