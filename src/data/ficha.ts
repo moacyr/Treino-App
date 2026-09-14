@@ -40,7 +40,7 @@ export const FICHA: Dia[] = [
       ex('desenvolvimento', 'Desenvolvimento Militar', 'bilateral', 4, '6–8', 120, 'Halteres ou barra, carga alta. Core firme, sem arquear a lombar pra empurrar. Ombro forte é o que segura a alça da mochila hora após hora. Fechou as 4 séries em 8? Sobe pro próximo par de halteres na semana seguinte.'),
       ex('elevacao-lateral', 'Elevação Lateral', 'bilateral', 3, '20', 45, 'Peso leve, movimento limpo. Pare na linha do ombro.'),
       ex('rosca-direta', 'Rosca Direta', 'bilateral', 3, '15', 45, 'Cotovelo colado no tronco. Sem impulso de quadril.'),
-      ex('triceps-corda', 'Tríceps Corda', 'bilateral', 3, '20', 45, 'Abra a corda no final do movimento.'),
+      ex('triceps-corda', 'Tríceps Corda', 'bilateral', 3, '20', 45, 'Peso leve: aqui a proposta é volume, não carga. Se as 20 não saem limpas nas 3 séries, baixe a carga — cotovelo colado no tronco, sem ajuda do ombro. Abra a corda no final do movimento.'),
       ex('face-pull', 'Face Pull', 'core', 3, '20', 45, 'Puxe até a altura do rosto, cotovelo alto. Abre o ombro que a mochila fecha.'),
     ],
   },
