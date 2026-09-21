@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { contarConcluidos, FICHA } from '../data/ficha'
-import type { Dia, SessaoRegistro } from '../types'
+import { contarConcluidos, EMOJI_TIPO, FICHA, ROTULO_TIPO } from '../data/ficha'
+import type { SessaoRegistro } from '../types'
 import { getSessoesDaSemana, semanaISO } from '../db/db'
 import { irPara } from '../router'
 import { useVersaoDados } from '../hooks/useSync'
@@ -24,19 +24,6 @@ function diaDeHojeId(): string {
 function rotuloCurto(iso: string): string {
   const [, mes, dia] = iso.split('-')
   return `${dia}/${mes}`
-}
-
-function iconeTipo(dia: Dia): string {
-  if (dia.tipo === 'trilha') return '🥾'
-  if (dia.tipo === 'descanso') return '🌙'
-  if (dia.tipo === 'cardio') return '🚴'
-  return ''
-}
-
-const ROTULO_TIPO: Record<string, string> = {
-  trilha: 'Trilha',
-  descanso: 'Descanso',
-  cardio: 'Cardio',
 }
 
 export function Home() {
@@ -99,9 +86,9 @@ export function Home() {
                 <div className="card-dia-cabecalho">
                   <span className="card-dia-semana">{dia.diaSemana}</span>
                   {ehHoje && <span className="badge-hoje">hoje</span>}
-                  {iconeTipo(dia) && (
+                  {EMOJI_TIPO[dia.tipo] && (
                     <span className="card-dia-icone" aria-hidden="true">
-                      {iconeTipo(dia)}
+                      {EMOJI_TIPO[dia.tipo]}
                     </span>
                   )}
                 </div>
@@ -109,25 +96,27 @@ export function Home() {
                 <h2 className="card-dia-titulo">{dia.titulo}</h2>
                 <p className="card-dia-sub">{dia.subtitulo}</p>
 
-                {dia.tipo === 'treino' ? (
-                  <div className="card-dia-rodape">
+                <div className="card-dia-rodape">
+                  {dia.tipo === 'treino' ? (
                     <span className="card-dia-qtd">{total} exercícios</span>
-                    {feitos > 0 && (
-                      <span className="card-dia-progresso">
-                        <span className="mono">
-                          {feitos}/{total}
-                        </span>
-                        <span className="barra">
-                          <span className="barra-fill" style={{ width: `${pct}%` }} />
-                        </span>
+                  ) : (
+                    <span className="card-dia-tag-tipo">
+                      {ROTULO_TIPO[dia.tipo]}
+                      {total > 0 && ` · ${total} exercícios`}
+                    </span>
+                  )}
+
+                  {feitos > 0 && (
+                    <span className="card-dia-progresso">
+                      <span className="mono">
+                        {feitos}/{total}
                       </span>
-                    )}
-                  </div>
-                ) : (
-                  <div className="card-dia-rodape">
-                    <span className="card-dia-tag-tipo">{ROTULO_TIPO[dia.tipo]}</span>
-                  </div>
-                )}
+                      <span className="barra">
+                        <span className="barra-fill" style={{ width: `${pct}%` }} />
+                      </span>
+                    </span>
+                  )}
+                </div>
               </button>
             )
           })}

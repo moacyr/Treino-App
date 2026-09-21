@@ -11,11 +11,13 @@ export interface Exercicio {
   series: number
   /** texto livre, ex: '20', '15/perna', '40s/lado' */
   reps: string
-  /** segundos, para o timer de descanso */
+  /** segundos, para o timer de descanso. 0 = esforço contínuo, sem descanso */
   descansoSeg: number
   dica: string
   /** termo de busca já pronto para o YouTube */
   buscaYoutube: string
+  /** unidade do campo de carga; default 'kg' (ex.: 'nível' na escada) */
+  unidadeCarga?: string
 }
 
 export interface Dia {
@@ -26,9 +28,9 @@ export interface Dia {
   /** a linha de lógica do dia */
   subtitulo: string
   tipo: TipoDia
-  /** vazio para descanso/trilha/cardio */
+  /** vazio nos dias sem musculação (descanso, trilha) */
   exercicios: Exercicio[]
-  /** texto para dias de descanso/trilha/cardio */
+  /** nota de contexto do dia; pode conviver com a lista de exercícios */
   nota?: string
 }
 

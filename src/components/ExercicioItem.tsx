@@ -24,10 +24,12 @@ function parseCarga(texto: string): number | null {
 function CargaInput({
   serie,
   valor,
+  unidade,
   aoDefinir,
 }: {
   serie: number
   valor: number | null
+  unidade: string
   aoDefinir: (valor: number | null) => void
 }) {
   const [texto, setTexto] = useState(valor == null ? '' : String(valor))
@@ -51,9 +53,9 @@ function CargaInput({
           setTexto(e.target.value)
           aoDefinir(parseCarga(e.target.value))
         }}
-        aria-label={`Carga da série ${serie + 1} em kg`}
+        aria-label={`Carga da série ${serie + 1} em ${unidade}`}
       />
-      <span className="carga-unidade">kg</span>
+      <span className="carga-unidade">{unidade}</span>
     </label>
   )
 }
@@ -69,6 +71,9 @@ export function ExercicioItem({
   aoAlternarConcluido,
 }: Props) {
   const timer = useTimer()
+  // Esforço contínuo (ex.: 30 min de escada) não tem descanso entre séries.
+  const temDescanso = exercicio.descansoSeg > 0
+  const unidade = exercicio.unidadeCarga ?? 'kg'
 
   return (
     <li className={`exercicio${concluido ? ' exercicio--feito' : ''}`}>
@@ -107,10 +112,12 @@ export function ExercicioItem({
           <span className="meta-rotulo">séries</span>
           <span className="mono meta-valor">{exercicio.series}</span>
         </span>
-        <span className="meta-item">
-          <span className="meta-rotulo">descanso</span>
-          <span className="mono meta-valor">{exercicio.descansoSeg}s</span>
-        </span>
+        {temDescanso && (
+          <span className="meta-item">
+            <span className="meta-rotulo">descanso</span>
+            <span className="mono meta-valor">{exercicio.descansoSeg}s</span>
+          </span>
+        )}
       </div>
 
       <p className="exercicio-dica">{exercicio.dica}</p>
@@ -121,22 +128,25 @@ export function ExercicioItem({
             key={i}
             serie={i}
             valor={cargas[i] ?? null}
+            unidade={unidade}
             aoDefinir={(valor) => aoDefinirCarga(i, valor)}
           />
         ))}
       </div>
 
       <div className="exercicio-acoes">
-        <button
-          className="acao acao--timer"
-          onClick={() => timer.iniciar(exercicio.descansoSeg, exercicio.nome)}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="2" />
-            <path d="M12 9v4l2.5 2M9 2h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-          Descanso {exercicio.descansoSeg}s
-        </button>
+        {temDescanso && (
+          <button
+            className="acao acao--timer"
+            onClick={() => timer.iniciar(exercicio.descansoSeg, exercicio.nome)}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="2" />
+              <path d="M12 9v4l2.5 2M9 2h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            Descanso {exercicio.descansoSeg}s
+          </button>
+        )}
 
         <button
           className="acao acao--hist"

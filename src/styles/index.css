@@ -198,6 +198,10 @@ button {
   border-radius: 999px;
   transition: width 0.3s ease;
 }
+/* Dia de condicionamento: o progresso acompanha o vinho do card/cabeçalho. */
+.tipo-cardio .barra-fill {
+  background: linear-gradient(90deg, var(--condicionamento), #7f1d3a);
+}
 
 /* ---------- Conteúdo ---------- */
 .conteudo {
@@ -312,6 +316,9 @@ button {
   font-size: 12.5px;
   font-weight: 700;
   color: var(--azul);
+}
+.card-dia.tipo-cardio .card-dia-progresso .mono {
+  color: var(--condicionamento);
 }
 .card-dia-progresso .barra {
   min-width: 60px;

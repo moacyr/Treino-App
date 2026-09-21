@@ -58,7 +58,10 @@ export function HistoricoView({ exercicio, dia }: { exercicio: Exercicio; dia: D
           </span>
           {melhor != null && (
             <span className="hist-recorde">
-              melhor <span className="mono">{melhor} kg</span>
+              melhor{' '}
+              <span className="mono">
+                {melhor} {exercicio.unidadeCarga ?? 'kg'}
+              </span>
             </span>
           )}
         </div>

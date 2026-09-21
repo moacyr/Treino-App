@@ -8,7 +8,10 @@ dispositivos — **o app continua funcionando 100% offline nos dois casos**.
 ## O que faz
 
 - **Ver a ficha** — os 7 dias da semana (Seg–Dom) com exercícios, séries, reps,
-  descanso e dicas de execução.
+  descanso e dicas de execução. Terça e quinta são dias de condicionamento:
+  abrem com 30 min de escada ergométrica (ou elíptico) e seguem com os
+  acessórios que não cabiam em segunda, quarta e sexta — por isso um dia de
+  cardio também tem lista de exercícios e barra de progresso.
 - **Registrar carga por série** — um campo de kg por série, com salvamento
   automático. Aceita decimais (vírgula ou ponto).
 - **Marcar exercício como concluído** — checkbox por exercício e progresso do
